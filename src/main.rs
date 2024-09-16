@@ -1,8 +1,8 @@
 use std::{
-  io::{self, Read, Write},
-  net::{Ipv4Addr, SocketAddr, TcpListener, TcpStream}
+  fmt::format, io::{self, Read, Write}, net::{Ipv4Addr, SocketAddr, TcpListener, TcpStream}
 };
 
+use std::fs;
 use simple_http::http::request;
 
 fn create_socket() -> SocketAddr {
@@ -23,36 +23,36 @@ fn handle_client(stream: &mut TcpStream) -> io::Result<()> {
     let body = response.response_body.clone();
     
     stream.write(&mut body.as_bytes())?;
-    // let mut file = "";
-    // let mut begin_html = r#"
-    // <!DOCTYPE html> 
-    // <html> 
-    // <head> 
-    //     <meta charset="utf-8"> 
-    // </head> 
-    // <body>"#.to_string();
+    
+    stream.flush()?;
+    Ok(())
+    
+    // let files = fs::read_dir("/home/tech/rust/simple-http").unwrap();
+    // let pwd = std::env::current_dir()?;
+    // let mut dir: Vec<String> = Vec::new();
+    // for item in files {
+    //     let value = item.unwrap().path().display().to_string();
+    //     let res = format!("<a href='{}'>{}</a>", value, value.clone());
+    //     dir.push(res);
+    // };
 
-    // let mut header =
-    //                 format!("<h1>Currently in {}</h1>", file.to_string_lossy()).into_bytes();
+    // let mut result: String = String::new();
+    // for p in dir {
+    //     result = format!("<p>{result}</p><p>{p}</p>");
+    // }
 
-    // // Build your response here
-
-    // let mut end_html = r#"
-    // </body>
-    // </html>"#.to_string();
-
-    // let valid_response = "HTTP/2 200\ncontent-type: text/html\nvary: Accept-Encoding\r\n\r\n\
+    // let valid_response = format!("HTTP/2 200\ncontent-type: text/html\nvary: Accept-Encoding\r\n\r\n\
     // <html>
     // <body>
-    // <h1> Hello World!</h1>
-    // </body>
-    // </html>";
+    // <h1><a href='{:?}'>{:?}</a></h1>
+    // {:?}
+    // </body></html>",pwd, pwd, result);
     // let stringified_buffer = String::from_utf8_lossy(&buffer);
     // print!("HTTP response?\n{}", stringified_buffer);
     // stream.write(&mut valid_response.as_bytes())?;
-    stream.flush()?;
-    Ok(())
-
+    // stream.flush()?;
+    // Ok(())
+    
 }
 
 fn serve(socket: SocketAddr) -> io::Result<()> {
